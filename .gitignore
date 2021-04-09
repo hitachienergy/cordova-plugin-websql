@@ -1,0 +1,12 @@
+**/*~
+**/._*
+**/.DS_Store
+.idea
+npm-debug.log
+node_modules
+
+src/windows/obj
+dist/ARM/*.pdb
+dist/ARM/*.pri
+dist/x86/*.pdb
+dist/x86/*.pri

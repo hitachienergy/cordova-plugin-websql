@@ -15,33 +15,14 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     <repo>https://github.com/msopentech/cordova-plugin-websql/</repo>
     <issue>https://github.com/msopentech/cordova-plugin-websql/issues</issue>
 
-    <platform name="wp8">
-        <js-module src="www/WebSQL.js" name="WebSQL">
-            <merges target="window" />
-        </js-module>
-        <js-module src="www/wp8/Database.js" name="Database" />
-        <js-module src="www/wp8/SqlTransaction.js" name="SqlTransaction" />
-
-        <config-file target="config.xml" parent="/*">
-            <feature name="WebSql">
-                <param name="wp-package" value="WebSql"/>
-            </feature>
-        </config-file>
-        <source-file src="src/wp/WebSql.cs" />
-        <source-file src="src/wp/SQLite.cs" />
-        <framework src="src/wp/Community.CsharpSqlite.WinPhone.dll" custom="true"/>
-    </platform>
-
     <platform name="windows">
+        <hook type="after_plugin_install" src="scripts/after_plugin_install.js"/>
+
         <js-module src="www/WebSQL.js" name="WebSQL">
-            <merges target="window" />
+            <clobbers target="window.WebSQL" />
         </js-module>
         <js-module src="www/windows/Database.js" name="Database" />
         <js-module src="www/windows/SqlTransaction.js" name="SqlTransaction" />
-
-        <framework src="src/windows/SQLite.Proxy/SQLite.Proxy.csproj"
-            custom="true" type="projectReference" target="all" />
-
         <js-module src="src/windows/WebSqlProxy.js" name="WebSqlProxy">
             <runs />
         </js-module>
