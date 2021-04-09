@@ -22,7 +22,7 @@ SqlTransaction.prototype.executeSql = function(sql, params, onSuccess, onError) 
         throw new Error('sql query can\'t be null or empty');
     }
 
-    if (typeof (this.connectionId) == 'undefined' || this.connectionId <= 0) {
+    if (typeof (this.connectionId) === 'undefined' || this.connectionId <= 0) {
         this.Log('executeSql, ERROR: Connection is not set');
         throw new Error('Connection is not set');
     }
@@ -48,18 +48,19 @@ SqlTransaction.prototype.executeSql = function(sql, params, onSuccess, onError) 
         };
 
         // process rows to be W3C spec compliant; TODO - this must be done inside native part for performance reasons
-        for (idxRow = 0; idxRow < res.rows.length; idxRow++) {
+        for (var idxRow = 0; idxRow < res.rows.length; idxRow++) {
             var originalRow = res.rows[idxRow],
-                refinedRow = {},
-                idxColumn;
-              
+                refinedRow = {};
+
             res.rows[idxRow] = refinedRow;
 
-            for (idxColumn in originalRow) {
-                refinedRow[originalRow[idxColumn].Key] = originalRow[idxColumn].Value;
-            } 
+            for (var idxColumn in originalRow) {
+                if (originalRow.hasOwnProperty(idxColumn)){
+                    refinedRow[originalRow[idxColumn].Key] = originalRow[idxColumn].Value;
+                }
+            }
         }
-       
+
         if (onSuccess) {
             try {
                 onSuccess(me, res);
@@ -70,7 +71,7 @@ SqlTransaction.prototype.executeSql = function(sql, params, onSuccess, onError) 
                     } catch (errCbEx) {
                         me.Log("Error occured while executing error callback: " + errCbEx + "; query: " + me.sql);
                         rollbackRequired = true;
-                    }                    
+                    }
                 } else {
                     rollbackRequired = true;
                 }
@@ -93,7 +94,7 @@ SqlTransaction.prototype.executeSql = function(sql, params, onSuccess, onError) 
         }
         lastError = error;
     };
-    
+
     try {
         exec(this.successCallback, this.errorCallback, "WebSql", "executeSql", [this.connectionId, this.sql, this.params]);
     } catch(ex) {
